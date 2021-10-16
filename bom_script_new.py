@@ -4,7 +4,7 @@ import csv
 import argparse
 
 # Run dpkg license script generator
-subprocess.call("./dpkg-licenses/dpkg-licenses", shell = True)
+subprocess.call("./dpkg_license_gen/dpkg-licenses.sh", shell = True)
 print("Generating Dpkg Licenses csv file")
 
 # Generate dpkg packages (csv)
