@@ -38,7 +38,7 @@ print("Generating Dpkg Licenses csv file")
 
 # Generate dpkg packages (csv)
 print("Generating Origin for dpkg installed packages ............")
-with open('installed_packages.csv', 'w', newline='') as f:
+with open('CSV_ouputs/installed_packages.csv', 'w', newline='') as f:
 	headers = ['Name','Origin','Licenses']
 	writer = csv.DictWriter(f, fieldnames=headers)
 	writer.writeheader()
@@ -55,7 +55,7 @@ with open('installed_packages.csv', 'w', newline='') as f:
 
 # Check GPL and LGPL licenses
 print("Generating sources for GPL and LGPL dpkg packages ............")
-with open('installed_packages.csv') as csv_read:
+with open('CSV_ouputs/installed_packages.csv') as csv_read:
 	for row in csv.DictReader(csv_read):
 		if row["Licenses"].startswith("GPL") or row["Licenses"].startswith("LGPL"):
 			package_name = row["Name"]
@@ -63,7 +63,8 @@ with open('installed_packages.csv') as csv_read:
 			subprocess.call("sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list", shell = True)
 			subprocess.call("ap-get update", shell = True)
 			subprocess.check_output("apt-get source {} ".format(package_name[0]), cwd='GPL_license_source_codes',shell = True).decode().split()
-
+		else:
+			continue
 
 '''
 # Generate pip freeze packages (csv)
