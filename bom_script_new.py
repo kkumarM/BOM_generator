@@ -58,10 +58,8 @@ with open('CSV_outputs/installed_packages.csv', 'w', newline='') as f:
 				writer.writerow(row)  # Automatically skips missing keys
 
 
-for i in GPL_package_list:
-	print(i)
-	name = i.split(":")
-	print(name)
+for i in GPL_package_list:	
+	name = i.split(":")	
 	subprocess.call("cp /etc/apt/sources.list /etc/apt/sources.list~", shell = True)
 	subprocess.call("sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list", shell = True)
 	subprocess.call("apt-get update", shell = True)
