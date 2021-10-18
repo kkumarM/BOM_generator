@@ -58,7 +58,7 @@ print("Generating sources for GPL and LGPL dpkg packages ............")
 with open('CSV_outputs/installed_packages.csv') as csv_read:
 	for row in csv.DictReader(csv_read):
 		if row["Licenses"].startswith("GPL") or row["Licenses"].startswith("LGPL"):
-			package_name = row["Name"]
+			package_name = row["Name"].split("==")
 			print("GPL Package Name:", package_name)
 			subprocess.call("cp /etc/apt/sources.list /etc/apt/sources.list~", shell = True)
 			subprocess.call("sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list", shell = True)
