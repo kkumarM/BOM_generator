@@ -38,7 +38,7 @@ print("Generating Dpkg Licenses csv file")
 
 # Generate dpkg packages (csv)
 print("Generating Origin for dpkg installed packages ............")
-with open('CSV_ouputs/installed_packages.csv', 'w', newline='') as f:
+with open('CSV_outputs/installed_packages.csv', 'w', newline='') as f:
 	headers = ['Name','Origin','Licenses']
 	writer = csv.DictWriter(f, fieldnames=headers)
 	writer.writeheader()
@@ -55,7 +55,7 @@ with open('CSV_ouputs/installed_packages.csv', 'w', newline='') as f:
 
 # Check GPL and LGPL licenses
 print("Generating sources for GPL and LGPL dpkg packages ............")
-with open('CSV_ouputs/installed_packages.csv') as csv_read:
+with open('CSV_outputs/installed_packages.csv') as csv_read:
 	for row in csv.DictReader(csv_read):
 		if row["Licenses"].startswith("GPL") or row["Licenses"].startswith("LGPL"):
 			package_name = row["Name"]
