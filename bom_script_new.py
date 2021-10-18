@@ -67,7 +67,7 @@ for i in GPL_package_list:
 	subprocess.call("apt-get update", shell = True)
 	try:
 		subprocess.check_output("apt-get source {} ".format(name[0]), cwd='GPL_license_source_codes',shell = True).decode().split()
-	except Exception, e:
+	except Exception as e:
 		output = str(e.output)
 		print(output)
 				
