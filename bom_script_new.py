@@ -33,7 +33,7 @@ if not os.path.exists(output_csv_path):
     path = os.makedirs(output_csv_path)
 
 # Run dpkg license script generator
-subprocess.call("./dpkg-licenses/dpkg-licenses.sh", shell = True)
+subprocess.call("./dpkg_licenses_gen/dpkg-licenses.sh", shell = True)
 print("Generating Dpkg Licenses csv file")
 
 # Generate dpkg packages (csv)
