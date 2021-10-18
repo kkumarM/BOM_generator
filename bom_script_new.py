@@ -61,7 +61,7 @@ with open('CSV_ouputs/installed_packages.csv') as csv_read:
 			package_name = row["Name"]
 			subprocess.call("cp /etc/apt/sources.list /etc/apt/sources.list~", shell = True)
 			subprocess.call("sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list", shell = True)
-			subprocess.call("ap-get update", shell = True)
+			subprocess.call("apt-get update", shell = True)
 			subprocess.check_output("apt-get source {} ".format(package_name[0]), cwd='GPL_license_source_codes',shell = True).decode().split()
 		else:
 			continue
