@@ -1,5 +1,9 @@
 #!/bin/bash
-
+# Copyright (c) 2020 Intel Corporation
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+# Author: Karthik Kumaar <karthikx.kumaar@intel.com>
 set -e
 
 CSV=0
@@ -64,12 +68,12 @@ done
 if [ -f "/usr/local/bin/pip3" ]  
 then
     echo "collecting pip3 packages ..........."
-    pip3 list --format=freeze > pip3_freeze_all_packages.txt
-    printf "Name,Origin,License,Distributed,Notes/Comments\n" >> pip3_freeze_all_packages.csv
+    pip3 list --format=freeze > CSV_outputs/pip3_freeze_all_packages.txt
+    printf "Name,Origin,License,Distributed,Notes/Comments\n" >> CSV_outputs/pip3_freeze_all_packages.csv
     pip3 list --format=freeze | cut -d= -f1 | \
     while read PYNAME; do
         ORIGIN=$(pip3 show $PYNAME | awk '/^Home-page/{printf $2}')
         LICENSE="$(pip3 show $PYNAME | sed -n '/License/p' | cut -d: -f2 | sed 's/\<Licences\>//g' | sed 's/\<License\>//g' | tr -d '[:space:]' | sed 's/[,]/\//')" 
-        printf "${PYNAME},${ORIGIN},${LICENSE},Yes,\n" >> pip3_freeze_all_packages.csv
+        printf "${PYNAME},${ORIGIN},${LICENSE},Yes,\n" >> CSV_outputs/pip3_freeze_all_packages.csv
     done
 fi
