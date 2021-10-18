@@ -65,8 +65,11 @@ for i in GPL_package_list:
 	subprocess.call("cp /etc/apt/sources.list /etc/apt/sources.list~", shell = True)
 	subprocess.call("sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list", shell = True)
 	subprocess.call("apt-get update", shell = True)
-	subprocess.check_output("apt-get source {} ".format(name[0]), cwd='GPL_license_source_codes',shell = True).decode().split()
-	
+	try:
+		subprocess.check_output("apt-get source {} ".format(name[0]), cwd='GPL_license_source_codes',shell = True).decode().split()
+	except Exception, e:
+		output = str(e.output)
+		print(output)
 				
 '''
 # Check GPL and LGPL licenses
