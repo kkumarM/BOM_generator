@@ -54,7 +54,7 @@ with open('CSV_outputs/installed_packages.csv', 'w', newline='') as f:
 				if len(origin) !=0 and row["Name"] not in base_packages_list:
 					row = {'Name': str(row['Name'])+"=="+str(row['Version']), 'Origin': origin[1], 'Licenses': row['Licenses']}
 				else:
-					row = {'Name': str(row['Name'])+"=="+str(row['Version']), 'Origin': "", 'Licenses': row['Licenses']}
+					row = {'Name': str(row['Name'])+"=="+str(row['Version']), 'Origin': "ubuntu", 'Licenses': row['Licenses']}
 				# Now write the rows:				
 				writer.writerow(row)  # Automatically skips missing keys
 
