@@ -46,7 +46,8 @@ with open('CSV_outputs/installed_packages.csv', 'w', newline='') as f:
 	writer.writeheader()
 	with open("out.csv", 'r') as csv_read:
 		for row in csv.DictReader(csv_read):
-			if row["Name"] not in base_packages_list:
+			Name = row["Name"].split(":")
+			if Name not in base_packages_list:
 				if row["Licenses"].startswith("GPL") or row["Licenses"].startswith("LGPL"):
 					GPL_package_list.append(row["Name"])
 				origin = subprocess.check_output("apt-cache show {} | awk '/^Homepage/'".format(row["Name"]), shell = True).decode().split()
