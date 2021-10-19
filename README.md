@@ -33,3 +33,10 @@ sudo docker cp <container id>:<location of your csv files> <location of local ho
 #GPL_license_source_codes:
  - This folder contains the source codes for GPL and LGPL license packages use in the docker container
 ```
+
+
+**Generating Base Package text file**
+```sh
+sudo docker run -it -u0 openvino.ubuntu18_runtime:2021.4 
+dpkg-query -W -f='${package}\n'
+```
