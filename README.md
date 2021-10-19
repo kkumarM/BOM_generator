@@ -37,6 +37,6 @@ sudo docker cp <container id>:<location of your csv files> <location of local ho
 
 **Generating Base Package text file**
 ```sh
-sudo docker run -it -u0 openvino.ubuntu18_runtime:2021.4 
+sudo docker run -it -u0 openvino/ubuntu18_runtime:2021.4 
 dpkg-query -W -f='${package}\n'
 ```
