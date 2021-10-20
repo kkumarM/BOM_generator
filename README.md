@@ -1,5 +1,5 @@
 # BOM_generator
-Author: Karthik Kumaar <karthikx.kumaar@intel.com>
+Author: Karthik Kumaar 
 
 ## Execution Steps:
 

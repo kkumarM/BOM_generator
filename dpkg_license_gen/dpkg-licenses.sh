@@ -3,7 +3,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 #
-# Author: Karthik Kumaar <karthikx.kumaar@intel.com>
+# Author: Karthik Kumaar 
 set -e
 
 CSV=0
