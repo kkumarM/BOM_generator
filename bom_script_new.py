@@ -32,6 +32,9 @@ if not os.path.exists(sources_path):
 if not os.path.exists(output_csv_path):
     path = os.makedirs(output_csv_path)
 
+# Run Autoremove to remove automatically installed packages
+subprocess.call("apt autoremove", shell = True)
+
 # Run dpkg license script generator
 subprocess.call("./dpkg_license_gen/dpkg-licenses.sh", shell = True)
 print("Generating Dpkg Licenses csv file")
