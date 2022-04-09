@@ -1,7 +1,4 @@
 #!/usr/bin/env python3
-
-# 
-#
 # Author: Karthik Kumaar 
 import subprocess
 import csv
