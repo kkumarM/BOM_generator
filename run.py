@@ -36,7 +36,7 @@ class GenerateBOM(object):
 		container.exec_run(cmd,stream=True,demux=False,detach=False,user="root")
 		
 
-	def run_bom_generator(self):
+	def run_bom_generator(self, base_package,):
 		cmd = "/bin/bash -c 'whoami && apt-get update && apt-get install git'"
 		#cmd1 = "/bin/bash -c '[ -d './BOM_generator' ] && rm -rf ./BOM_generator'"
 		cmd2 = "/bin/bash -c 'git clone https://github.com/kkumarM/BOM_generator.git'"
@@ -65,7 +65,7 @@ class GenerateBOM(object):
 		function to get inputs from user to get the base package, 
 		if doesn't exists, genereate one
 		Parameters : None
-		Return: 
+		Return: None
 		"""
 		container_name, container_id, running_containers = self.get_running_containers()
 		print('\n',colored("List of Running Containers:", "green"),'\n')
@@ -87,7 +87,7 @@ class GenerateBOM(object):
 			if os.path.exists(f"base_image_packages/{base_package}.txt"):
 				print("Inside")
 				print(colored("Base package already present !","cyan"))	
-				self.run_bom_generator(base_package, new_base_image=False)
+				self.run_bom_generator(base_package)
 
 			else:
 				print(colored("Base package not present !","cyan"))	
@@ -95,7 +95,7 @@ class GenerateBOM(object):
 				if out == "yes" or out == "y":
 					print(base_package)
 					self.create_base_package(image, base_package)
-					self.run_bom_generator(base_package, new_base_image=True)
+					self.run_bom_generator(base_package)
 				else:
 					print(colored("Exiting....","red"))
 				# if out == "yes":
