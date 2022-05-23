@@ -21,7 +21,7 @@ class GenerateBOM(object):
 		Return: List
 		"""
 		
-		running_containers = self.client.containers.list()
+		running_containers = self.client.containers.list(all=True)
 		container_ID = [container.short_id for container in running_containers]
 		container_name = [container.name for container in running_containers]
 		return container_name, container_ID, running_containers 
