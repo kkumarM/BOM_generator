@@ -5,6 +5,7 @@
 import docker
 import subprocess
 import os
+import sys
 from termcolor import colored
 from io import StringIO,BytesIO
 import tarfile
@@ -80,6 +81,9 @@ class GenerateBOM(object):
 				print(colored("Container ID doesn't exists, Please verify !", "red"))
 				input_container_id = input(colored("Enter Container ID:","yellow"))
 			for obj in running_containers:
+				if input_container_id == "":
+					print(colored("Container ID is not Valid, Exiting ...", "red"))
+					sys.exit(0)
 				if input_container_id == obj.short_id:
 					self.obj_id = obj
 			image = input(colored("Enter Base Package (eg: openvino/ubuntu18_runtime:2021.2):","yellow"))
