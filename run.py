@@ -33,8 +33,11 @@ class GenerateBOM(object):
 		Parameters : None
 		Return: 
 		"""
-		temp_cont = self.client.create_container(image=image, command = "dpkg-query -W -f='${package}\n' > {0}}.txt".format(name))
-		container.exec_run(cmd,stream=True,demux=False,detach=False,user="root")
+		cmd = "dpkg-query -W -f={} > {}.txt".format('${package}\n',name)
+		cmd1 = f"sudo docker run -it -u0 {image} && {cmd}"
+		subprocess.run(cmd1, shell=True)
+		#temp_cont = self.client.create_container(image=image, command = "dpkg-query -W -f='${package}\n' > {0}}.txt".format(name))
+		#container.exec_run(cmd,stream=True,demux=False,detach=False,user="root")
 		
 
 	def run_bom_generator(self, base_package,):
