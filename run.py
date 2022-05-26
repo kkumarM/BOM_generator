@@ -22,7 +22,7 @@ class GenerateBOM(object):
 		Return: List
 		"""
 		
-		running_containers = self.client.containers.list(all=True)
+		running_containers = self.client.containers.list()
 		container_ID = [container.short_id for container in running_containers]
 		container_name = [container.name for container in running_containers]
 		return container_name, container_ID, running_containers 
@@ -30,25 +30,27 @@ class GenerateBOM(object):
 	def create_base_package(self, image, name):
 		"""
 		Function to create base package used in docker images
-		Parameters : None
-		Return: 
+		Parameters : base image, text file name
+		Return: generated package file
 		"""
-		cmd = "dpkg-query -W -f={} > {}.txt".format('${package}\n',name)
-		cmd1 = f"sudo docker run -it -u0 {image} && {cmd}"
-		subprocess.run(cmd1, shell=True)
-		#temp_cont = self.client.create_container(image=image, command = "dpkg-query -W -f='${package}\n' > {0}}.txt".format(name))
-		#container.exec_run(cmd,stream=True,demux=False,detach=False,user="root")
+		cmd = "dpkg-query -W -f='${package}\n'"
+		temp_cont = self.client.containers.run(image=image, command = cmd)
+		with open(name + ".txt","w") as file:
+			file.write(temp_cont.decode("utf-8"))
+		return name
 		
 
-	def run_bom_generator(self, base_package,):
+	def run_bom_generator(self, base_package, name):
 		cmd = "/bin/bash -c 'whoami && apt-get update && apt-get install git'"
-		#cmd1 = "/bin/bash -c '[ -d './BOM_generator' ] && rm -rf ./BOM_generator'"
+		cmd1 = f"sudo docker cp {name}  {self.obj_id}:/BOM_generator/base_image_packages"
 		cmd2 = "/bin/bash -c 'git clone https://github.com/kkumarM/BOM_generator.git'"
 		cmd3 = f"/bin/bash -c 'cd ./BOM_generator && python3 bom_script_new.py {base_package}.txt'"
 		print(self.obj_id)
 		_,out = self.obj_id.exec_run(cmd,stream=True,demux=False,detach=False,user="root")
 		#_,out1 = self.obj_id.exec_run(cmd1,stream=True,demux=False,detach=False,user="root")
-		#_,out2 = self.obj_id.exec_run(cmd2,stream=True,demux=False,detach=False,user="root")
+		_,out2 = self.obj_id.exec_run(cmd2,stream=True,demux=False,detach=False,user="root")
+		if name != "":
+			subprocess.run(cmd1, shell=True)
 		_,out3 = self.obj_id.exec_run(cmd3,stream=True,demux=False,detach=False,user="root")
 		# for data in out:
 		# 	print(data.decode("utf-8"))
@@ -94,15 +96,15 @@ class GenerateBOM(object):
 			if os.path.exists(f"base_image_packages/{base_package}.txt"):
 				print("Inside")
 				print(colored("Base package already present !","cyan"))	
-				self.run_bom_generator(base_package)
+				self.run_bom_generator(base_package, name="")
 
 			else:
 				print(colored("Base package not present !","cyan"))	
 				out = input(colored("Do you want to create one (yes/no):","cyan"))
 				if out == "yes" or out == "y":
 					print(base_package)
-					self.create_base_package(image, base_package)
-					self.run_bom_generator(base_package)
+					file_name = self.create_base_package(image, base_package)
+					self.run_bom_generator(base_package, name=file_name)
 				else:
 					print(colored("Exiting....","red"))
 				# if out == "yes":
