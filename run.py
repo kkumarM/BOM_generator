@@ -35,30 +35,30 @@ class GenerateBOM(object):
 		"""
 		cmd = "dpkg-query -W -f='${package}\n'"
 		temp_cont = self.client.containers.run(image=image, command = cmd)
-		with open(name + ".txt","w") as file:
+		with open("BOM_main/base_image_packages/" + name + ".txt","w") as file:
 			file.write(temp_cont.decode("utf-8"))
 		return name
 		
 
-	def run_bom_generator(self, base_package, name):
-		cmd = "/bin/bash -c 'whoami && apt-get update && apt-get install git'"
-		cmd1 = f"sudo docker cp {name}  {self.obj_id}:/BOM_generator/base_image_packages"
-		cmd2 = "/bin/bash -c 'git clone https://github.com/kkumarM/BOM_generator.git'"
-		cmd3 = f"/bin/bash -c 'cd ./BOM_generator && python3 bom_script_new.py {base_package}.txt'"
+	def run_bom_generator(self, base_package, cont_id):
+		pwd = os.getcwd()
+		print("cont id:", self.obj_id)
+		#cmd = "/bin/bash -c 'whoami && apt-get update && apt-get install git'"
+		cmd1 = f"sudo docker cp {pwd}/BOM_main  {cont_id}:/"
+		#cmd2 = "/bin/bash -c 'git clone https://github.com/kkumarM/BOM_generator.git'"
+		cmd3 = f"/bin/bash -c 'cd BOM_main && python3 bom_script_new.py {base_package}.txt'"
 		print(self.obj_id)
-		_,out = self.obj_id.exec_run(cmd,stream=True,demux=False,detach=False,user="root")
+		subprocess.run(cmd1, shell=True)
+		#_,out = self.obj_id.exec_run(cmd1,stream=True,demux=False,detach=False,user="root")
 		#_,out1 = self.obj_id.exec_run(cmd1,stream=True,demux=False,detach=False,user="root")
-		_,out2 = self.obj_id.exec_run(cmd2,stream=True,demux=False,detach=False,user="root")
-		if name != "":
-			subprocess.run(cmd1, shell=True)
-		_,out3 = self.obj_id.exec_run(cmd3,stream=True,demux=False,detach=False,user="root")
+		_,out2 = self.obj_id.exec_run(cmd3,stream=True,demux=False,detach=False,user="root")		
 		# for data in out:
 		# 	print(data.decode("utf-8"))
-		# for data in out2:
-		# 	print(data.decode("utf-8"))
-		for data in out3:
+		for data in out2:
 			print(data.decode("utf-8"))
-		res,stat = self.obj_id.get_archive('BOM_generator/CSV_outputs', chunk_size=2097152, encode_stream=False)
+		# for data in out3:
+		# 	print(data.decode("utf-8"))
+		res,stat = self.obj_id.get_archive('BOM_main/CSV_outputs', chunk_size=2097152, encode_stream=False)
 		# Save Output files from container to local
 		filetype = BytesIO(b"".join(b for b in res))
 		tar = tarfile.open(fileobj=filetype)
@@ -93,10 +93,10 @@ class GenerateBOM(object):
 					self.obj_id = obj
 			image = input(colored("Enter Base Package (eg: openvino/ubuntu18_runtime:2021.2):","yellow"))
 			base_package = image.replace('.','_').replace(':','_').replace('/','_')
-			if os.path.exists(f"base_image_packages/{base_package}.txt"):
+			if os.path.exists(f"BOM_main/base_image_packages/{base_package}.txt"):
 				print("Inside")
 				print(colored("Base package already present !","cyan"))	
-				self.run_bom_generator(base_package, name="")
+				self.run_bom_generator(base_package,input_container_id)
 
 			else:
 				print(colored("Base package not present !","cyan"))	
@@ -104,7 +104,7 @@ class GenerateBOM(object):
 				if out == "yes" or out == "y":
 					print(base_package)
 					file_name = self.create_base_package(image, base_package)
-					self.run_bom_generator(base_package, name=file_name)
+					self.run_bom_generator(base_package,input_container_id)
 				else:
 					print(colored("Exiting....","red"))
 				# if out == "yes":
