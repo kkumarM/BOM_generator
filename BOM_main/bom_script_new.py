@@ -4,6 +4,7 @@ import subprocess
 import csv
 import os 
 import argparse
+import threading
 
 # Get docker base image packages from user 
 parser = argparse.ArgumentParser(description='Enter your base image packages text file.')
@@ -20,10 +21,12 @@ except:
 	print("Base Image package file not found")
 
 # Create Folders
-work_path = os.getcwd()
-print(work_path)
-sources_path = os.path.join(work_path,'GPL_license_source_codes')
-output_csv_path = os.path.join(work_path, 'CSV_outputs')
+out_path = os.getcwd() + "/output"
+print(out_path)
+sources_path = os.path.join(out_path,'GPL_license_source_codes')
+output_csv_path = os.path.join(out_path, 'CSV_outputs')
+if not os.path.exists(out_path):
+	path = os.makedirs(out_path)
 if not os.path.exists(sources_path):
     path = os.makedirs(sources_path)
 if not os.path.exists(output_csv_path):
@@ -38,7 +41,7 @@ print("Generating Dpkg Licenses csv file")
 
 # Generate dpkg packages (csv)
 print("Generating Origin for dpkg installed packages ............")
-with open('CSV_outputs/installed_packages.csv', 'w', newline='') as f:
+with open('output/CSV_outputs/installed_packages.csv', 'w', newline='') as f:
 	headers = ['Name','Origin','Licenses']
 	writer = csv.DictWriter(f, fieldnames=headers)
 	writer.writeheader()
@@ -56,21 +59,21 @@ with open('CSV_outputs/installed_packages.csv', 'w', newline='') as f:
 				# Now write the rows:				
 				writer.writerow(row)  # Automatically skips missing keys
 
-
+print("Generating sources for GPL and LGPL dpkg packages ............")
+subprocess.run("cp /etc/apt/sources.list /etc/apt/sources.list~", shell = True)
+subprocess.run("sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list", shell = True)
+subprocess.run("apt-get update", shell = True)
 for i in GPL_package_list:	
-	name = i.split(":")	
-	subprocess.call("cp /etc/apt/sources.list /etc/apt/sources.list~", shell = True)
-	subprocess.call("sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list", shell = True)
-	subprocess.call("apt-get update", shell = True)
+	name = i.split(":")
 	try:
-		subprocess.check_output("apt-get source {} ".format(name[0]), cwd='GPL_license_source_codes',shell = True).decode().split()
+		subprocess.run("apt-get source {} ".format(name[0]), cwd='output/GPL_license_source_codes',shell = True)
 	except Exception as e:
 		output = str(e.output)
 		print(output)
 				
 '''
 # Check GPL and LGPL licenses
-print("Generating sources for GPL and LGPL dpkg packages ............")
+
 with open('CSV_outputs/installed_packages.csv') as csv_read:
 	for row in csv.DictReader(csv_read):
 		if row["Licenses"].startswith("GPL") or row["Licenses"].startswith("LGPL"):
