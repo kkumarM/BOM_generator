@@ -46,7 +46,7 @@ class GenerateBOM(object):
 		#cmd = "/bin/bash -c 'whoami && apt-get update && apt-get install git'"
 		cmd1 = f"sudo docker cp {pwd}/BOM_main  {cont_id}:/"
 		#cmd2 = "/bin/bash -c 'git clone https://github.com/kkumarM/BOM_generator.git'"
-		cmd3 = f"/bin/bash -c 'cd BOM_main && python3 bom_script_new.py {base_package}.txt'"
+		cmd3 = f"/bin/bash -c 'cd /BOM_main && python3 bom_script_new.py {base_package}.txt'"
 		print(self.obj_id)
 		subprocess.run(cmd1, shell=True)
 		#_,out = self.obj_id.exec_run(cmd1,stream=True,demux=False,detach=False,user="root")
