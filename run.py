@@ -58,7 +58,7 @@ class GenerateBOM(object):
 			print(data.decode("utf-8"))
 		# for data in out3:
 		# 	print(data.decode("utf-8"))
-		res,stat = self.obj_id.get_archive('BOM_main/CSV_outputs', chunk_size=2097152, encode_stream=False)
+		res,stat = self.obj_id.get_archive('BOM_main/output', chunk_size=2097152, encode_stream=False)
 		# Save Output files from container to local
 		filetype = BytesIO(b"".join(b for b in res))
 		tar = tarfile.open(fileobj=filetype)
