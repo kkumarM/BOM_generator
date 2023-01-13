@@ -61,7 +61,7 @@ case "$format" in
 esac
 
 if [ -n "$result" ]; then
-  echo "$result" | sed -r -e 's/ and /\n/g' -e 's/^ +//' -e 's/ +$//' -e 's/icence/icense/g' | sort -u
+  echo "$result" | sed -r -e 's/ and /\n/g' -e 's/^ +//' -e 's/ +$//' -e 's/icence/icense/g' 
 fi
 
 exit 0
